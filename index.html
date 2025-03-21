@@ -9,8 +9,8 @@
             const phaserConfig = {
                 type: Phaser.AUTO,
                 parent: "game",
-                width: 1280,
-                height: 720,
+                width: 512,
+                height: 512,
                 backgroundColor: "#ffffff", // White background
                 scene: {
                     preload: preloadScene,
@@ -20,38 +20,76 @@
             };
 
             const game = new Phaser.Game(phaserConfig);
+            let player, cursors;
 
             function preloadScene() {
-                // Ensure assets are inside the "assets" folder in GitHub
-                this.load.atlas("Knuckles", "./assets/Knuckles.png", "./assets/Knuckles.json");
-
-                // Error handling if files fail to load
-                this.load.on('loaderror', (file) => {
-                    console.error("Failed to load:", file.src);
-                });
+                this.load.atlas("character", "./assets/character.png", "./assets/character_sprite_atlas.json");
             }
 
             function createScene() {
-                // Create animation using Knuckles' frames
-                this.anims.create({
-                    key: "run",
-                    frameRate: 10,
-                    frames: this.anims.generateFrameNames("Knuckles", {
-                        prefix: "frame_",
-                        suffix: ".png",
-                        start: 0,
-                        end: 31  // Adjust based on available frames
-                    }),
-                    repeat: -1
+                // Create character animations
+                const directions = ["down", "left", "right", "up"];
+                
+                directions.forEach(direction => {
+                    this.anims.create({
+                        key: `${direction}_walk`,
+                        frames: this.anims.generateFrameNames("character", {
+                            prefix: `${direction}_`,
+                            suffix: ".png",
+                            start: 0,
+                            end: 3
+                        }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
                 });
 
-                // Create Knuckles sprite and start animation
-                let knuckles = this.add.sprite(640, 360, "Knuckles");
-                knuckles.play("run");
+                // Add player sprite
+                player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5);
+                
+                // Enable keyboard input
+                cursors = this.input.keyboard.addKeys({
+                    up: Phaser.Input.Keyboard.KeyCodes.W,
+                    down: Phaser.Input.Keyboard.KeyCodes.S,
+                    left: Phaser.Input.Keyboard.KeyCodes.A,
+                    right: Phaser.Input.Keyboard.KeyCodes.D
+                });
             }
 
-            function updateScene() {}
+            function updateScene() {
+                let moving = false;
+                
+                if (cursors.left.isDown) {
+                    player.x -= 2;
+                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
+                        player.play("left_walk", true);
+                    }
+                    moving = true;
+                } else if (cursors.right.isDown) {
+                    player.x += 2;
+                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "right_walk") {
+                        player.play("right_walk", true);
+                    }
+                    moving = true;
+                } else if (cursors.up.isDown) {
+                    player.y -= 2;
+                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
+                        player.play("up_walk", true);
+                    }
+                    moving = true;
+                } else if (cursors.down.isDown) {
+                    player.y += 2;
+                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
+                        player.play("down_walk", true);
+                    }
+                    moving = true;
+                }
 
+                // Stop animation when idle
+                if (!moving) {
+                    player.setFrame("down_0.png"); // Default idle frame
+                }
+            }
         </script>
     </body>
 </html>
