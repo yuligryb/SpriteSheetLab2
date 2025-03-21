@@ -23,12 +23,12 @@
         let player, cursors;
         
         function preloadScene() {
-            this.load.atlas("character", "./assets/character_sprite_atlas.png", "./assets/character_sprite_atlas.json");
+            this.load.atlas("character", "./assets/character.png", "./assets/character_sprite_atlas.json");
         }
         
         function createScene() {
             // Create character animations
-            const directions = ["down", "left", "right", "up"];
+            const directions = ["up", "right", "left", "down"];
             
             directions.forEach((direction, index) => {
                 this.anims.create({
@@ -59,28 +59,28 @@
         function updateScene() {
             let moving = false;
             
-            if (cursors.up.isDown) { // Up is actually Down
+            if (cursors.up.isDown) { // W moves Up
+                player.y -= 2;
+                if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
+                    player.play("up_walk", true);
+                }
+                moving = true;
+            } else if (cursors.down.isDown) { // S moves Down
                 player.y += 2;
                 if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
                     player.play("down_walk", true);
                 }
                 moving = true;
-            } else if (cursors.down.isDown) { // Down is actually Left
+            } else if (cursors.left.isDown) { // A moves Left
                 player.x -= 2;
                 if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
                     player.play("left_walk", true);
                 }
                 moving = true;
-            } else if (cursors.left.isDown) { // Left is actually Right
+            } else if (cursors.right.isDown) { // D moves Right
                 player.x += 2;
                 if (!player.anims.isPlaying || player.anims.currentAnim.key !== "right_walk") {
                     player.play("right_walk", true);
-                }
-                moving = true;
-            } else if (cursors.right.isDown) { // Right is actually Up
-                player.y -= 2;
-                if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
-                    player.play("up_walk", true);
                 }
                 moving = true;
             }
@@ -90,7 +90,6 @@
                 player.setFrame("down_0.png"); // Default idle frame
             }
         }
-
         </script>
     </body>
 </html>
