@@ -23,7 +23,7 @@
             let player, cursors;
 
             function preloadScene() {
-                this.load.atlas("character", "./assets/character_sprite_atlas.png", "./assets/character_sprite_atlas.json");
+                this.load.atlas("character", "./assets/character.png", "./assets/character_sprite_atlas.json");
             }
 
             function createScene() {
@@ -44,8 +44,8 @@
                     });
                 });
 
-                // Add player sprite
-                player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5);
+                // Add player sprite and scale it up
+                player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5).setScale(2);
                 
                 // Enable keyboard input
                 cursors = this.input.keyboard.addKeys({
@@ -59,28 +59,28 @@
             function updateScene() {
                 let moving = false;
                 
-                if (cursors.left.isDown) {
+                if (cursors.down.isDown) { // Top row is down
+                    player.y += 2;
+                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
+                        player.play("down_walk", true);
+                    }
+                    moving = true;
+                } else if (cursors.left.isDown) { // Second row is left
                     player.x -= 2;
                     if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
                         player.play("left_walk", true);
                     }
                     moving = true;
-                } else if (cursors.right.isDown) {
+                } else if (cursors.right.isDown) { // Third row is right
                     player.x += 2;
                     if (!player.anims.isPlaying || player.anims.currentAnim.key !== "right_walk") {
                         player.play("right_walk", true);
                     }
                     moving = true;
-                } else if (cursors.up.isDown) {
+                } else if (cursors.up.isDown) { // Bottom row is up
                     player.y -= 2;
                     if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
                         player.play("up_walk", true);
-                    }
-                    moving = true;
-                } else if (cursors.down.isDown) {
-                    player.y += 2;
-                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
-                        player.play("down_walk", true);
                     }
                     moving = true;
                 }
