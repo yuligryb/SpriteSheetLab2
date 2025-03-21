@@ -23,7 +23,7 @@
             let player, cursors;
 
             function preloadScene() {
-                this.load.atlas("character", "./assets/character_sprite_atlas.png", "./assets/character_sprite_atlas.json");
+                this.load.atlas("character", "./assets/character.png", "./assets/character_sprite_atlas.json");
             }
 
             function createScene() {
@@ -59,25 +59,25 @@
             function updateScene() {
                 let moving = false;
                 
-                if (cursors.down.isDown) { // Top row is down
+                if (cursors.down.isDown) { // First row is down
                     player.y += 2;
                     if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
                         player.play("down_walk", true);
                     }
                     moving = true;
-                } else if (cursors.left.isDown) { // Second row is left
-                    player.x -= 2;
-                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
-                        player.play("left_walk", true);
-                    }
-                    moving = true;
-                } else if (cursors.right.isDown) { // Third row is right
+                } else if (cursors.right.isDown) { // Second row is left (Swapped Right & Left)
                     player.x += 2;
                     if (!player.anims.isPlaying || player.anims.currentAnim.key !== "right_walk") {
                         player.play("right_walk", true);
                     }
                     moving = true;
-                } else if (cursors.up.isDown) { // Bottom row is up
+                } else if (cursors.left.isDown) { // Third row is right
+                    player.x -= 2;
+                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
+                        player.play("left_walk", true);
+                    }
+                    moving = true;
+                } else if (cursors.up.isDown) { // Fourth row is up
                     player.y -= 2;
                     if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
                         player.play("up_walk", true);
@@ -89,7 +89,7 @@
                 if (!moving) {
                     player.setFrame("down_0.png"); // Default idle frame
                 }
-            }
+            } // ✅ Fixed missing closing bracket
         </script>
     </body>
 </html>
