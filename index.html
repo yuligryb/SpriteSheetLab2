@@ -27,12 +27,12 @@
         }
         
         function createScene() {
-            // Create character animations
+            // Adjusting animations to match correct sprite order
             const directionMap = {
-                down: "down",
-                left: "left",
-                right: "right",
-                up: "up"
+                up: "up",    // Fourth row
+                right: "right", // Third row
+                left: "left", // Second row
+                down: "down"     // First row
             };
         
             Object.entries(directionMap).forEach(([key, rowName]) => {
