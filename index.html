@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
     </head>
     <body>
         <div id="game"></div>
         <script>
-
             const phaserConfig = {
                 type: Phaser.AUTO,
                 parent: "game",
                 width: 1280,
                 height: 720,
+                backgroundColor: "#ffffff", // White background
                 scene: {
                     preload: preloadScene,
                     create: createScene,
@@ -22,14 +22,16 @@
             const game = new Phaser.Game(phaserConfig);
 
             function preloadScene() {
-                // Load texture atlas (ensure plane.json is properly formatted)
-                this.load.atlas("plane", "plane.png", "plane.json");
+                // Ensure assets are inside the "assets" folder in GitHub
+                this.load.atlas("Knuckles", "./assets/Knuckles.png", "./assets/Knuckles.json");
+
+                // Error handling if files fail to load
+                this.load.on('loaderror', (file) => {
+                    console.error("Failed to load:", file.src);
+                });
             }
 
             function createScene() {
-                // Ensure textures are processed correctly
-                this.textures.addAtlasJSONHash("plane", "plane.png", "plane.json");
-
                 // Create flying animation
                 this.anims.create({
                     key: "fly",
