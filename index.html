@@ -6,7 +6,7 @@
     <body>
         <div id="game"></div>
         <script>
-        const phaserConfig = {
+         const phaserConfig = {
             type: Phaser.AUTO,
             parent: "game",
             width: 512,
@@ -29,10 +29,10 @@
         function createScene() {
             // Create character animations
             const directionMap = {
-                up: "down",
-                left: "right",
-                right: "left",
-                down: "up"
+                up: "up",
+                left: "left",
+                right: "right",
+                down: "down"
             };
         
             Object.entries(directionMap).forEach(([key, rowName]) => {
@@ -95,7 +95,6 @@
                 player.setFrame("down_0.png"); // Default idle frame
             }
         }
-
         </script>
     </body>
 </html>
