@@ -6,90 +6,91 @@
     <body>
         <div id="game"></div>
         <script>
-            const phaserConfig = {
-                type: Phaser.AUTO,
-                parent: "game",
-                width: 512,
-                height: 512,
-                backgroundColor: "#ffffff", // White background
-                scene: {
-                    preload: preloadScene,
-                    create: createScene,
-                    update: updateScene
-                }
-            };
-
-            const game = new Phaser.Game(phaserConfig);
-            let player, cursors;
-
-            function preloadScene() {
-                this.load.atlas("character", "./assets/character_sprite_atlas.png", "./assets/character_sprite_atlas.json");
+        const phaserConfig = {
+            type: Phaser.AUTO,
+            parent: "game",
+            width: 512,
+            height: 512,
+            backgroundColor: "#ffffff", // White background
+            scene: {
+                preload: preloadScene,
+                create: createScene,
+                update: updateScene
             }
-
-            function createScene() {
-                // Create character animations
-                const directions = ["down", "left", "right", "up"];
-                
-                directions.forEach(direction => {
-                    this.anims.create({
-                        key: `${direction}_walk`,
-                        frames: this.anims.generateFrameNames("character", {
-                            prefix: `${direction}_`,
-                            suffix: ".png",
-                            start: 0,
-                            end: 3
-                        }),
-                        frameRate: 10,
-                        repeat: -1
-                    });
+        };
+        
+        const game = new Phaser.Game(phaserConfig);
+        let player, cursors;
+        
+        function preloadScene() {
+            this.load.atlas("character", "./assets/character.png", "./assets/character_sprite_atlas.json");
+        }
+        
+        function createScene() {
+            // Create character animations
+            const directions = ["down", "left", "right", "up"];
+            
+            directions.forEach((direction, index) => {
+                this.anims.create({
+                    key: `${direction}_walk`,
+                    frames: this.anims.generateFrameNames("character", {
+                        prefix: `${direction}_`,
+                        suffix: ".png",
+                        start: 0,
+                        end: 3
+                    }),
+                    frameRate: 10,
+                    repeat: -1
                 });
-
-                // Add player sprite and scale it up
-                player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5).setScale(2);
-                
-                // Enable keyboard input
-                cursors = this.input.keyboard.addKeys({
-                    up: Phaser.Input.Keyboard.KeyCodes.W,
-                    down: Phaser.Input.Keyboard.KeyCodes.S,
-                    left: Phaser.Input.Keyboard.KeyCodes.A,
-                    right: Phaser.Input.Keyboard.KeyCodes.D
-                });
+            });
+        
+            // Add player sprite and scale it up
+            player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5).setScale(2);
+            
+            // Enable keyboard input
+            cursors = this.input.keyboard.addKeys({
+                up: Phaser.Input.Keyboard.KeyCodes.W,
+                down: Phaser.Input.Keyboard.KeyCodes.S,
+                left: Phaser.Input.Keyboard.KeyCodes.A,
+                right: Phaser.Input.Keyboard.KeyCodes.D
+            });
+        }
+        
+        function updateScene() {
+            let moving = false;
+            
+            if (cursors.up.isDown) { // Up is actually Down
+                player.y += 2;
+                if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
+                    player.play("down_walk", true);
+                }
+                moving = true;
+            } else if (cursors.down.isDown) { // Down is actually Left
+                player.x -= 2;
+                if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
+                    player.play("left_walk", true);
+                }
+                moving = true;
+            } else if (cursors.left.isDown) { // Left is actually Right
+                player.x += 2;
+                if (!player.anims.isPlaying || player.anims.currentAnim.key !== "right_walk") {
+                    player.play("right_walk", true);
+                }
+                moving = true;
+            } else if (cursors.right.isDown) { // Right is actually Up
+                player.y -= 2;
+                if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
+                    player.play("up_walk", true);
+                }
+                moving = true;
             }
+        
+            // Stop animation when idle
+            if (!moving) {
+                player.setFrame("down_0.png"); // Default idle frame
+            }
+        }
 
-            function updateScene() {
-                let moving = false;
-                
-                if (cursors.down.isDown) { // First row is down
-                    player.y += 2;
-                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "down_walk") {
-                        player.play("down_walk", true);
-                    }
-                    moving = true;
-                } else if (cursors.right.isDown) { // Second row is left (Swapped Right & Left)
-                    player.x += 2;
-                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "right_walk") {
-                        player.play("right_walk", true);
-                    }
-                    moving = true;
-                } else if (cursors.left.isDown) { // Third row is right
-                    player.x -= 2;
-                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "left_walk") {
-                        player.play("left_walk", true);
-                    }
-                    moving = true;
-                } else if (cursors.up.isDown) { // Fourth row is up
-                    player.y -= 2;
-                    if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
-                        player.play("up_walk", true);
-                    }
-                    moving = true;
-                }
-
-                // Stop animation when idle
-                if (!moving) {
-                    player.setFrame("down_0.png"); // Default idle frame
-                }
-            } // ✅ Fixed missing closing bracket
         </script>
     </body>
 </html>
