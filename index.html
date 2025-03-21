@@ -28,13 +28,18 @@
         
         function createScene() {
             // Create character animations
-            const directions = ["up", "right", "left", "down"];
-            
-            directions.forEach((direction, index) => {
+            const directionMap = {
+                up: "down",
+                left: "right",
+                right: "left",
+                down: "up"
+            };
+        
+            Object.entries(directionMap).forEach(([key, rowName]) => {
                 this.anims.create({
-                    key: `${direction}_walk`,
+                    key: `${key}_walk`,
                     frames: this.anims.generateFrameNames("character", {
-                        prefix: `${direction}_`,
+                        prefix: `${rowName}_`,
                         suffix: ".png",
                         start: 0,
                         end: 3
@@ -46,7 +51,7 @@
         
             // Add player sprite and scale it up
             player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5).setScale(2);
-            
+        
             // Enable keyboard input
             cursors = this.input.keyboard.addKeys({
                 up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -58,7 +63,7 @@
         
         function updateScene() {
             let moving = false;
-            
+        
             if (cursors.up.isDown) { // W moves Up
                 player.y -= 2;
                 if (!player.anims.isPlaying || player.anims.currentAnim.key !== "up_walk") {
@@ -90,6 +95,7 @@
                 player.setFrame("down_0.png"); // Default idle frame
             }
         }
+
         </script>
     </body>
 </html>
