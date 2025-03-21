@@ -20,7 +20,7 @@
         };
         
         const game = new Phaser.Game(phaserConfig);
-        let player, cursors;
+        let player, cursors, instructionText;
         
         function preloadScene() {
             this.load.atlas("character", "./assets/character_sprite_atlas.png", "./assets/character_sprite_atlas.json");
@@ -52,6 +52,14 @@
             // Add player sprite and scale it up
             player = this.add.sprite(256, 256, "character", "down_0.png").setOrigin(0.5, 0.5).setScale(2);
         
+            // Display instruction text
+            instructionText = this.add.text(180, 50, "Use WASD", {
+                fontFamily: "Arial",
+                fontSize: "20px",
+                fontStyle: "bold",
+                color: "#000000"
+            }).setAlpha(1);
+        
             // Enable keyboard input
             cursors = this.input.keyboard.addKeys({
                 up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -63,6 +71,17 @@
         
         function updateScene() {
             let moving = false;
+        
+            if (cursors.up.isDown || cursors.down.isDown || cursors.left.isDown || cursors.right.isDown) {
+                if (instructionText.alpha > 0) {
+                    this.tweens.add({
+                        targets: instructionText,
+                        alpha: 0,
+                        duration: 1000,
+                        ease: "Power2"
+                    });
+                }
+            }
         
             if (cursors.up.isDown) { // W moves Up
                 player.y -= 2;
