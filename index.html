@@ -32,46 +32,22 @@
             }
 
             function createScene() {
-                // Create flying animation
+                // Create animation using Knuckles' frames
                 this.anims.create({
-                    key: "fly",
-                    frameRate: 7,
-                    frames: this.anims.generateFrameNames("plane", {
-                        prefix: "plane",
+                    key: "run",
+                    frameRate: 10,
+                    frames: this.anims.generateFrameNames("Knuckles", {
+                        prefix: "frame_",
                         suffix: ".png",
-                        start: 1,
-                        end: 3
+                        start: 0,
+                        end: 31  // Adjust based on available frames
                     }),
                     repeat: -1
                 });
 
-                // Create explosion animation
-                this.anims.create({
-                    key: "explode",
-                    frameRate: 7,
-                    frames: this.anims.generateFrameNames("plane", {
-                        prefix: "explosion",
-                        suffix: ".png",
-                        start: 1,
-                        end: 3
-                    }),
-                    repeat: 2
-                });
-
-                // Create the plane sprite and start animation
-                let plane = this.add.sprite(640, 360, "plane");
-                plane.play("fly");
-
-                // Trigger explosion after 3 seconds
-                this.time.addEvent({
-                    delay: 3000,
-                    callback: () => {
-                        plane.play("explode");
-                        plane.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
-                            plane.destroy();
-                        });
-                    }
-                });
+                // Create Knuckles sprite and start animation
+                let knuckles = this.add.sprite(640, 360, "Knuckles");
+                knuckles.play("run");
             }
 
             function updateScene() {}
